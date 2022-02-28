@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+    <link rel="stylesheet" href="./css/app.css">
+    <title>AutoMobilia</title>
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+
+<body>
+    <header>
+        <section class='headerTop'>
+            <h1>AutoMobilia</h1>
+            <p>Find your next car here!</p>
+        </section>
+        <section class='sidebar'>
+            <!-- Sidebar -->
+            <fieldset class='tags'>
+                <input type="radio" name='tag' id='all' value="all" onclick="loadContentFromTag(this)"><label for='all'
+                    class="all active">All</label>
+                <input type="radio" name='tag' id='ui' value="ui" onclick="loadContentFromTag(this)"><label for='ui'
+                    class="ui">UI</label>
+                <input type="radio" name='tag' id='ux' value="ux" onclick="loadContentFromTag(this)"><label for='ux'
+                    class="ux">UX</label>
+                <input type="radio" name='tag' id='enhancement' value="enhancement"
+                    onclick="loadContentFromTag(this)"><label for='enhancement' class="enhancement">Enhancement</label>
+                <input type="radio" name='tag' id='bug' value="bug" onclick="loadContentFromTag(this)"><label for='bug'
+                    class="bug">Bug</label>
+                <input type="radio" name='tag' id='feature' value="feature" onclick="loadContentFromTag(this)"><label
+                    for='feature' class="feature">Feature</label>
+            </fieldset>
+
+        </section>
+    </header>
+    <!-- Sidebar end -->
+    <main>
+        <div class='top'>
+            <div>
+                Search
+                <div>
+                    <label for="sortBy">Sort by:</label>
+                    <select name="sortBy" id="sortBy">
+                        <option value="">Best Match</option>
+                        <option value="">Price (Least Expensive First)</option>
+                        <option value="">Price (Most Expensive First)</option>
+                        <option value="">Distance (Nearest First)</option>
+                        <option value="">Year (Oldest First)</option>
+                        <option value="">Year (Newest First)</option>
+                        <option value="">Mileage (Lowest First)</option>
+                        <option value="">Time on Market (Shortest First)</option>
+                        <option value="">Time on Market (Longest First)</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <section class='mainContent'>
+            <div class="pageCTA">
+                <button onclick="prev()">Back</button>
+                <button onclick="next()">Next</button>
+            </div>
+
+            <div class='content'>
+
+            </div>
+            <div class="pageCTA">
+                <button onclick="prev()">Back</button>
+                <button onclick="next()">Next</button>
+            </div>
+        </section>
+    </main>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+    var pageIndex = 1;
+    $('.content').hide();
+    loadContent();
+
+
+    function loadContent() {
+        $.getJSON('https://auto.dev/api/listings?apikey=ZrQEPSkKeXVyaWFsdmVzZ3Vlcm5zZXlAb3V0bG9vay5jb20&page=' +
+            pageIndex,
+            function (data) {
+                console.log(data['totalCountFormatted']);
+                $.each(data['records'], function (index, element) {
+                    console.log(element);
+                    $(".content").append('<a href="' + element['clickoffUrl'] +
+                        '" target="_blank"> <img src="' + element['primaryPhotoUrl'] + '"></a>');
+
+                });
+            }).then(function () {
+                $('.content').fadeIn();
+        });
+    };
+
+    function next(){
+        pageIndex += 1;
+        $(".content").html('');
+        loadContent();
+
+    }
+    function prev(){
+        if(pageIndex > 1){
+            pageIndex -= 1;
+        $(".content").html('');
+        loadContent();
+        }
+
+    }
+    
+</script>
+
+</html>
